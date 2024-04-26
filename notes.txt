@@ -1,0 +1,3 @@
+co kdyz vstup bude mensi jak 2 body?
+co nevalidni vstup?
+Dokumentace - README.md
