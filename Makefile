@@ -1,13 +1,13 @@
-SRC = spanning-Tree.pl
+SRC = spanning-tree.pl
 OUT = flp23-log
-
-all: $(OUT)
 
 $(OUT): $(SRC)
 	swipl -q -g start -o $(OUT) -c $(SRC)
 
+.PHONY: clean
 clean:
 	rm -f $(OUT)
 
-.PHONY: clean
-# TODO UNTESTED
+.PHONY: zip
+zip:
+	zip flp-log-xhosad00.zip spanning-tree.pl Makefile README.md in.txt

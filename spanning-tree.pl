@@ -300,6 +300,30 @@ printSolutionsFormated([H|T]):-
     printSolutionsFormated(T).
 
 /**
+ * validEdge(+Edge : list)
+ * 
+ * Succeeds if Edge is a valid edge representation, both elements
+ * of the list are single-character uppercase letters
+ *
+ * @param Edge Edge representation as a list.
+ */
+validEdge([[A], [B]]) :-
+    char_type(A, upper),
+    char_type(B, upper).
+
+/**
+ * filterInput(+Edges : list, -Filtered : list)
+ * 
+ * filter input edges using validEdge
+ *
+ * @param Edges List of edges to be filtered.
+ * @param Filtered List containing only valid edges.
+ */
+filterInput(Edges, Filtered) :-
+    include(validEdge, Edges, Filtered).
+
+
+/**
  * start/0 predicate that starts the program
  * loads input from console
  * creates possible solutions of spanning trees and then filters them accordingly
@@ -311,27 +335,19 @@ start :-
     prompt(_, ''),
     read_lines(LL),
     split_lines(LL,Input),
-% Input = [
-% [['A'],['B']],
-% [['A'],['C']],
-% [['A'],['D']],
-% [['B'],['C']]],
-    edges(Input, Edges),
-    vertices(Input, Ver),
-    length(Ver, VerCnt),
-    spanLen(Ver, SpanLen),
-    findall(Comb, combsOfLength(Edges, SpanLen, Comb), PossibleSolutions),
-    % writeln('Printing'),
-    filterSolutions(PossibleSolutions, Solutions, VerCnt),
-    % printListNL(Solutions),
-    printSolutionsFormated(Solutions)
-    % writeln('End')
+    filterInput(Input, FilteredIn),
+    (   FilteredIn == []
+    ->
+        !,
+        false
+    ;
+        edges(FilteredIn, Edges),
+        vertices(FilteredIn, Ver),
+        length(Ver, VerCnt),
+        spanLen(Ver, SpanLen),
+        findall(Comb, combsOfLength(Edges, SpanLen, Comb), PossibleSolutions),
+        filterSolutions(PossibleSolutions, Solutions, VerCnt),
+        printSolutionsFormated(Solutions),
+        halt
+    )
     .
-
-
-
-printListNL([]).
-% Recursive case: print the head of the list and recurse on the tail
-printListNL([Head|Tail]) :-
-    writeln(Head),
-    printListNL(Tail).
